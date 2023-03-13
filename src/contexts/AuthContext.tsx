@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useState, useEffect } from 'react';
 
 import { api } from '../services/apiClient'
 
@@ -49,9 +49,34 @@ export function signOut() {
 }
 
 
+
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserProps>();
     const isAuthenticated = !!user;
+
+
+    useEffect(() => {
+
+        //tentar pegar algo no cookie
+
+        const { '@nextauth.token': token } = parseCookies()
+
+        if (token) {
+            api.get('/me').then((response) => {
+                const { id, name, email } = response.data
+                setUser({
+                    id,
+                    name,
+                    email
+                })
+            }).catch(() => {
+                //se deu erro, desloga o user.
+                signOut()
+            })
+        }
+
+    }, [])
+
 
     async function signIn({ email, password }: SignInProps) {
         try {
@@ -77,7 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         } catch (err) {
             toast.error('Erro ao acessar')
-            console.log('Erro ao acessar',err)
+            console.log('Erro ao acessar', err)
         }
 
     }
@@ -85,7 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function signUp({ email, name, password }: SignUpProps) {
         try {
             const response = api.post('/users', { email, name, password })
-            
+
             toast.success("Conta criada com sucesso!")
 
             Router.push('/')
