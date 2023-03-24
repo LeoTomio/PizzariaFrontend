@@ -5,8 +5,9 @@ import { canSSRAuth } from "@/src/utils/canSSRauth";
 import { Header } from "@/src/components/Header";
 import { Input } from "@/src/components/ui/Input";
 import { FiUpload } from "react-icons/fi";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { setupAPIClient } from "@/src/services/api";
+import { toast } from "react-toastify";
 
 type ItemProps = {
     id: string;
@@ -48,8 +49,44 @@ export default function Product({ categoryList }: CategoryProps) {
     }
     //Quando voce selecionar uma nova categoria na lista 
     function handleChangeCategory(event) {
+        console.log(event.target.value)
         setSelectedCategory(event.target.value)
 
+    }
+
+
+    async function handleRegister(e: FormEvent) {
+        e.preventDefault();
+
+        try {
+            const data = new FormData();
+            if (!name || !price || !description || !imageAvatar) {
+                toast.error("Preencha todos os campos!")
+                return;
+            }
+            data.append('name', name)
+            data.append('price', price)
+            data.append('description', description)
+            data.append('category_id', categories[selectedCategory].id)
+            data.append('file', imageAvatar)
+
+            const apiClient = setupAPIClient();
+
+            await apiClient.post('/product', data)
+            
+            toast.success('Cadastrado com sucesso!')
+
+        } catch (error) {
+            console.log(error)
+            toast.error('Erro ao cadastrar!')
+        }
+
+        setName('')
+        setPrice('')
+        setSelectedCategory(0)
+        setDescription('')
+        setImageAvatar(null)
+        setAvatarUrl('')
     }
 
     return (
@@ -64,7 +101,7 @@ export default function Product({ categoryList }: CategoryProps) {
 
                 <main className={styles.container}>
                     <h1>Novo produto</h1>
-                    <form className={styles.form}>
+                    <form className={styles.form} onSubmit={handleRegister}>
 
 
                         <label className={styles.labelAvatar}>
@@ -84,6 +121,17 @@ export default function Product({ categoryList }: CategoryProps) {
                                 />
                             )}
                         </label>
+
+                        <select value={selectedCategory} onChange={handleChangeCategory}>
+                            {categories.map((item, key) => {
+                                return (
+                                    <option key={item.id} value={key}>
+                                        {item.name}
+                                    </option>
+                                )
+                            })}
+
+                        </select>
 
 
                         <Input
