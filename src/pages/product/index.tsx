@@ -6,12 +6,29 @@ import { Header } from "@/src/components/Header";
 import { Input } from "@/src/components/ui/Input";
 import { FiUpload } from "react-icons/fi";
 import { ChangeEvent, useState } from "react";
+import { setupAPIClient } from "@/src/services/api";
 
-export default function Product() {
+type ItemProps = {
+    id: string;
+    name: string;
+}
+
+interface CategoryProps {
+    categoryList: ItemProps[];
+}
+
+export default function Product({ categoryList }: CategoryProps) {
+
+    const [name, setName] = useState<string>('')
+    const [price, setPrice] = useState<string>('')
+    const [description, setDescription] = useState<string>('')
 
 
     const [avatarUrl, setAvatarUrl] = useState<string>('')
     const [imageAvatar, setImageAvatar] = useState(null)
+
+    const [categories, setCategories] = useState(categoryList || [])
+    const [selectedCategory, setSelectedCategory] = useState(0)
 
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -27,6 +44,11 @@ export default function Product() {
             setImageAvatar(image)
             setAvatarUrl(URL.createObjectURL(e.target.files[0]))
         }
+
+    }
+    //Quando voce selecionar uma nova categoria na lista 
+    function handleChangeCategory(event) {
+        setSelectedCategory(event.target.value)
 
     }
 
@@ -61,35 +83,28 @@ export default function Product() {
                                     height={250}
                                 />
                             )}
-
-
-
-
                         </label>
 
-
-                        <select>
-                            <option>
-                                Bebida
-                            </option>
-                            <option>
-                                Pizzas
-                            </option>
-                        </select>
 
                         <Input
                             type="text"
                             placeholder="Digite o nome do produto"
-                            className={styles.input} />
+                            className={styles.input}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)} />
 
                         <Input
                             type="text"
                             placeholder="Preço do produto"
-                            className={styles.input} />
+                            className={styles.input}
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)} />
 
                         <textarea
                             placeholder="Descreva seu produto..."
-                            className={styles.input} />
+                            className={styles.input}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)} />
 
                         <div className={styles.buttonContainer}>
                             <button className={styles.buttonAdd} type='submit'>
@@ -107,7 +122,13 @@ export default function Product() {
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
+    const apiClient = setupAPIClient(ctx)
+
+    const response = await apiClient.get('/category')
+
     return {
-        props: {}
+        props: {
+            categoryList: response.data
+        }
     }
 })

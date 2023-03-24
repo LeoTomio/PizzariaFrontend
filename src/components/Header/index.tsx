@@ -17,7 +17,7 @@ export function Header() {
                     <img src="/logo.svg" width={190} height={60} />
                 </Link>
 
-                <div className={styles.userDiv}><h2><b>Usuario:</b> {user?.name}</h2></div>
+                {/*<div className={styles.userDiv}><h2><b>Usuario:</b> {user?.name}</h2></div>*/}
 
                 <nav className={styles.menuNav}>
 
