@@ -73,7 +73,7 @@ export default function Product({ categoryList }: CategoryProps) {
             const apiClient = setupAPIClient();
 
             await apiClient.post('/product', data)
-            
+
             toast.success('Cadastrado com sucesso!')
 
         } catch (error) {
@@ -81,6 +81,10 @@ export default function Product({ categoryList }: CategoryProps) {
             toast.error('Erro ao cadastrar!')
         }
 
+        clear();
+    }
+
+    function clear() {
         setName('')
         setPrice('')
         setSelectedCategory(0)
@@ -158,7 +162,7 @@ export default function Product({ categoryList }: CategoryProps) {
                             <button className={styles.buttonAdd} type='submit'>
                                 Cadastrar
                             </button>
-                            <button className={styles.buttonAdd} type='reset'>
+                            <button className={styles.buttonAdd} type='reset' onClick={clear}>
                                 Limpar
                             </button>
                         </div>
