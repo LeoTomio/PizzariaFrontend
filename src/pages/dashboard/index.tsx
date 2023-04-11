@@ -6,6 +6,10 @@ import { FiRefreshCcw } from "react-icons/fi"
 import { Header } from "../../components/Header"
 import styles from './styles.module.scss'
 
+import { ModalOrder } from "@/src/components/ModalOrder"
+
+import Modal from 'react-modal'
+
 type OrderProps = {
     id: string;
     table: string | number;
@@ -18,13 +22,52 @@ interface HomeProps {
     orders: OrderProps[];
 }
 
+export type OrderItemProps = {
+    id: string;
+    amount: number;
+    order_id: string;
+    prodcut_id: string;
+    product: {
+        id: string;
+        name: string;
+        description: string;
+        price: string;
+        banner: string;
+    }
+    order: {
+        id: string;
+        table: string | number;
+        status: boolean;
+        name: string | null;
+    }
+}
+
 export default function Dashboard({ orders }: HomeProps) {
     const [orderList, setOrderList] = useState(orders || [])
 
+    const [modalItem, setModalItem] = useState<OrderItemProps[]>();
+    const [modalVisible, setModalVisible] = useState(false);
 
-    function handleOpenModalView(id: string) {
-        alert('test ' + id)
+
+    function handleCloseModal() {
+        setModalVisible(false)
     }
+
+
+    async function handleOpenModalView(id: string) {
+        const apiClient = setupAPIClient();
+
+        const response = await apiClient.get('/order/detail', {
+            params: {
+                order_id: id
+            }
+        }) 
+        setModalItem(response.data)
+        setModalVisible(true)
+
+    }
+
+    Modal.setAppElement('#__next')
 
     return (
         <>
@@ -57,18 +100,26 @@ export default function Dashboard({ orders }: HomeProps) {
 
                 </main>
 
+                {modalVisible && (
+                    <ModalOrder
+                        isOpen={modalVisible}
+                        onRequestClose={handleCloseModal}
+                        order={modalItem}
 
+                    />
+                )}
 
             </div>
         </>
     )
+
+    
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
     const apiClient = setupAPIClient(ctx);
 
-    const response = await apiClient.get('/order/list');
-
+    const response = await apiClient.get('/order/list'); 
     return {
         props: {
             orders: response.data
