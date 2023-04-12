@@ -61,10 +61,28 @@ export default function Dashboard({ orders }: HomeProps) {
             params: {
                 order_id: id
             }
-        }) 
+        })
         setModalItem(response.data)
         setModalVisible(true)
 
+    }
+
+    async function handleFinishItem(id: string) {
+        const apiClient = setupAPIClient()
+        await apiClient.put('/order/finish', {
+            order_id: id,
+        })
+
+        const response = await apiClient.get('/order/list')
+        setOrderList(response.data)
+        setModalVisible(false)
+    }
+
+    async function handleRefreshOrders() {
+        const apiClient = setupAPIClient();
+
+        const response = await apiClient.get('/order/list')
+        setOrderList(response.data)
     }
 
     Modal.setAppElement('#__next')
@@ -81,21 +99,26 @@ export default function Dashboard({ orders }: HomeProps) {
 
                     <div className={styles.containerHeader}>
                         <h1>Últimos pedidos</h1>
-                        <button>
+                        <button onClick={handleRefreshOrders}>
                             <FiRefreshCcw size={25} color="#3fffa3" />
                         </button>
                     </div>
 
                     <article className={styles.listOrders}>
-                        {orderList.map(item => (
+
+
+                        {!!orderList.length ? orderList.map(item => (
                             <section key={item.id} className={styles.orderItem}>
                                 <button onClick={() => handleOpenModalView(item.id)}>
                                     <div className={styles.tag}> </div>
                                     <span> Mesa {item.table}</span>
                                 </button>
                             </section>
-
-                        ))}
+                        )) :
+                            <span className={styles.emptyList}>
+                                Nenhum pedido aberto foi Encontrado...
+                            </span>
+                        }
                     </article>
 
                 </main>
@@ -105,6 +128,7 @@ export default function Dashboard({ orders }: HomeProps) {
                         isOpen={modalVisible}
                         onRequestClose={handleCloseModal}
                         order={modalItem}
+                        handleFinishOrder={handleFinishItem}
 
                     />
                 )}
@@ -113,13 +137,13 @@ export default function Dashboard({ orders }: HomeProps) {
         </>
     )
 
-    
+
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
     const apiClient = setupAPIClient(ctx);
 
-    const response = await apiClient.get('/order/list'); 
+    const response = await apiClient.get('/order/list');
     return {
         props: {
             orders: response.data
