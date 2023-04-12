@@ -3,6 +3,7 @@ import styles from './style.module.scss'
 
 import { FiX } from 'react-icons/fi'
 import { OrderItemProps } from '@/src/pages/dashboard';
+import { useState, useEffect } from 'react';
 
 interface ModalOrderProps {
     isOpen: boolean;
@@ -13,6 +14,8 @@ interface ModalOrderProps {
 
 
 export function ModalOrder({ isOpen, onRequestClose, order, handleFinishOrder }: ModalOrderProps) {
+
+    const [totalPrice, setTotalPrice] = useState<number>(0)
 
     const customStyles = {
         content: {
@@ -25,6 +28,15 @@ export function ModalOrder({ isOpen, onRequestClose, order, handleFinishOrder }:
             backgroundColor: '#1d1d2e'
         }
     }
+
+
+    useEffect(() => {
+        const orderTotal = order.reduce((total, item) => {
+            return total + item.amount * Number(item.product.price);
+        }, 0);
+
+        setTotalPrice(orderTotal);
+    }, [order]);
 
     return (
         <Modal
@@ -47,15 +59,24 @@ export function ModalOrder({ isOpen, onRequestClose, order, handleFinishOrder }:
                     Mesa: <strong> {order[0].order.table}</strong>
                 </span>
                 {order.map(item => {
+
                     return (
                         <section key={item?.id} className={styles.containerItem}>
-                            <span >{item?.amount} - <strong>{item?.product.name}</strong></span>
+                            <span >{item?.amount} - <strong>{item?.product.name}</strong> ( R$ {item?.product.price}. Un)</span>
                             <span className={styles.description}>{item?.product.description}</span>
+                            <span className={styles.totalPerItem}> Total:  <span className={styles.itemPrice}>R$ {(item?.amount * Number(item.product.price)).toFixed(2)}</span></span>
                         </section>
                     );
                 })}
 
-                <button className={styles.buttonOrder} onClick={() => handleFinishOrder(order[0].order_id)}>Concluir pedido</button>
+                <div>
+                    <span className={styles.totalOrder}>
+                        Total do Pedido:R$ {totalPrice.toFixed(2)}
+                    </span>
+                </div>
+                <div style={{textAlign:'center'}}>
+                    <button className={styles.buttonOrder} onClick={() => handleFinishOrder(order[0].order_id)}>Concluir pedido</button>
+                </div>
             </div>
 
 

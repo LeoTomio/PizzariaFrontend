@@ -26,7 +26,7 @@ export function Header() {
                     </Link>
 
                     <Link href="/product" legacyBehavior>
-                        <a>Cardapio</a>
+                        <a>Produtos</a>
                     </Link>
 
                     <button onClick={signOut}>

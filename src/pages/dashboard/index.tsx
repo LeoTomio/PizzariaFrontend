@@ -39,6 +39,7 @@ export type OrderItemProps = {
         table: string | number;
         status: boolean;
         name: string | null;
+        totalPrice?:  number;
     }
 }
 

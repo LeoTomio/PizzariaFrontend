@@ -24,18 +24,32 @@
 }
 
 .buttonOrder {
-    margin-top: 1.5rem;
+    margin-top: 1.7rem;
     background-color: rgba(0, 0, 0, 40%);
     border: 0;
-    padding: 0.5rem 1rem;
-    border-radius: 0.2rem;
-    color: var(--red-900)
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 0.8rem;
+    color: var(--red-900);
+
 }
 
-.table{
-    font-size: 1.3rem;
-    color: var(--green-900)
+.table {
+    font-size: 2rem;
 }
+
+.totalPerItem {
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+    color: var(--red-900);
+}
+
+.totalOrder {
+    margin-top: 2rem;
+    font-size: 1.7rem;
+    color: var(--orange-900);
+}
+
 
 @media screen and (max-width:700px) {
     .container {
