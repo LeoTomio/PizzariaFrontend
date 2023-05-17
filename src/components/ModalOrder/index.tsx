@@ -39,48 +39,31 @@ export function ModalOrder({ isOpen, onRequestClose, order, handleFinishOrder }:
     }, [order]);
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onRequestClose}
-            style={customStyles}
-        >
-
-            <button type="button"
-                onClick={onRequestClose}
-                className="react-modal-close"
-                style={{ background: 'transparent', border: 'none' }}
-            >
+        <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
+            <button className="react-modal-close" type="button" onClick={onRequestClose} style={{ background: 'transparent', border: 'none'}}>
                 <FiX size={45} color="#f34748" />
             </button>
-
             <div className={styles.container}>
-                <h2>Detalhes do pedido</h2>
-                <span className={styles.table}>
-                    Mesa: <strong> {order[0].order.table}</strong>
-                </span>
+                <div className={styles.table}><span >Mesa <strong> {order[0].order.table}</strong></span></div>
                 {order.map(item => {
-
                     return (
-                        <section key={item?.id} className={styles.containerItem}>
-                            <span >{item?.amount} - <strong>{item?.product.name}</strong> ( R$ {item?.product.price}. Un)</span>
-                            <span className={styles.description}>{item?.product.description}</span>
-                            <span className={styles.totalPerItem}> Total:  <span className={styles.itemPrice}>R$ {(item?.amount * Number(item.product.price)).toFixed(2)}</span></span>
-                        </section>
+                        <>
+                            <section key={item?.id} className={styles.containerItem} >
+                                <span>{item?.amount} - <strong>{item?.product.name}</strong> (R$ {item?.product.price}.Un)</span>
+                                <span>R${(item?.amount * Number(item.product.price)).toFixed(2)}</span>
+                            </section>
+                        </>
                     );
                 })}
-
-                <div>
-                    <span className={styles.totalOrder}>
-                        Total do Pedido:R$ {totalPrice.toFixed(2)}
-                    </span>
+                <hr className={styles.hrLine} />
+                <div className={styles.totalOrder} >
+                    <span>Total do Pedido </span>
+                    <span>R${totalPrice.toFixed(2)}</span>
                 </div>
-                <div style={{textAlign:'center'}}>
+                <div style={{ textAlign: 'center' }} >
                     <button className={styles.buttonOrder} onClick={() => handleFinishOrder(order[0].order_id)}>Concluir pedido</button>
                 </div>
             </div>
-
-
-
         </Modal >
     )
 }
