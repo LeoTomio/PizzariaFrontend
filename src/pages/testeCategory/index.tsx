@@ -9,16 +9,19 @@ import styles from './styles.module.scss';
 import { CategoryProps } from "../product";
 
 import { FiPlus, FiTrash2 } from "react-icons/fi"
+import { CategoryModal } from "@/src/components/ModalCategory";
 
 
 
 export default function Category({ categoryList: listCategory }: CategoryProps) {
 
     const [categoryList, setCategoryList] = useState(listCategory || [])
+    const [openModalCategory, setOpenModalCategory] = useState<boolean>(false)
 
-    function handleOpenModalView() {
-        
+    function handleCloseModal() {
+        setOpenModalCategory(false)
     }
+
 
     const category = categoryList.map((item, key) => {
         return (
@@ -48,11 +51,18 @@ export default function Category({ categoryList: listCategory }: CategoryProps) 
                     <div className={styles.containerHeader}>
                         <div>
 
-                            <button onClick={() => handleOpenModalView()}>Adicionar</button>
+                            <button onClick={() => setOpenModalCategory(true)}>Adicionar</button>
                         </div>
                     </div>
                     {category}
                 </main>
+
+                {openModalCategory === true &&
+                    <CategoryModal
+                        isOpen={openModalCategory}
+                        onRequestClose={handleCloseModal}
+                    />}
+
             </div>
         </>
     )
