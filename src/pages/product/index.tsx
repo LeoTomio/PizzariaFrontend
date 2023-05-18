@@ -14,7 +14,7 @@ type ItemProps = {
     name: string;
 }
 
-interface CategoryProps {
+export interface CategoryProps {
     categoryList: ItemProps[];
 }
 
@@ -49,15 +49,11 @@ export default function Product({ categoryList }: CategoryProps) {
     }
     //Quando voce selecionar uma nova categoria na lista 
     function handleChangeCategory(event) {
-        console.log(event.target.value)
         setSelectedCategory(event.target.value)
-
     }
-
 
     async function handleRegister(e: FormEvent) {
         e.preventDefault();
-
         try {
             const data = new FormData();
             if (!name || !price || !description || !imageAvatar) {
@@ -134,7 +130,6 @@ export default function Product({ categoryList }: CategoryProps) {
                                     </option>
                                 )
                             })}
-
                         </select>
 
 

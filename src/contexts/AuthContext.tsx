@@ -45,22 +45,15 @@ export function signOut() {
     } catch {
         console.log('erro ao deslogar')
     }
-
 }
-
-
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserProps>();
     const isAuthenticated = !!user;
 
-
     useEffect(() => {
-
         //tentar pegar algo no cookie
-
         const { '@nextauth.token': token } = parseCookies()
-
         if (token) {
             api.get('/me').then((response) => {
                 const { id, name, email } = response.data

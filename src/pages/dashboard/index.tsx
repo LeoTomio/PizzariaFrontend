@@ -39,7 +39,7 @@ export type OrderItemProps = {
         table: string | number;
         status: boolean;
         name: string | null;
-        totalPrice?:  number;
+        totalPrice?: number;
     }
 }
 
@@ -121,7 +121,6 @@ export default function Dashboard({ orders }: HomeProps) {
                             </span>
                         }
                     </article>
-
                 </main>
 
                 {modalVisible && (
@@ -130,7 +129,6 @@ export default function Dashboard({ orders }: HomeProps) {
                         onRequestClose={handleCloseModal}
                         order={modalItem}
                         handleFinishOrder={handleFinishItem}
-
                     />
                 )}
 

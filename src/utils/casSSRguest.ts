@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 import { parseCookies } from 'nookies'
 
-// Funcao para paganas que só pode ser acessadas por visitantes
+// Funcao para paginas que só pode ser acessadas por visitantes
 export function canSSRGuest<P>(fn: GetServerSideProps<P>) {
     return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
 

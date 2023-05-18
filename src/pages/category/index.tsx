@@ -48,7 +48,6 @@ export default function Category() {
                         <button className={styles.buttonAdd} type="submit">
                             Cadastrar
                         </button>
-
                     </form>
                 </main>
             </div>
@@ -58,7 +57,6 @@ export default function Category() {
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
-
     return {
         props: {}
     }
