@@ -10,21 +10,24 @@
     padding-left: 1rem;
     border-radius: 8px;
 
+
+    h1 {
+        padding-top: 1rem;
+        color: var(--white);
+        text-align: left;
+    }
 }
 
-
-
-.teste{
+.teste {
     padding: 2rem;
-}
-.closeButton {
-    margin-top:1rem;
     text-align: right;
+
+    .closeButton {
+        margin-top: 1rem;
+    }
 }
-.container h1 {
-    padding-top: 1rem;
-    color: var(--white);
-}
+
+
 
 .form {
     text-align: center;

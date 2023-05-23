@@ -68,7 +68,7 @@ export default function Product({ categoryList }: CategoryProps) {
 
             const apiClient = setupAPIClient();
 
-            await apiClient.post('/product', data)
+            await apiClient.post('/product/', data)
 
             toast.success('Cadastrado com sucesso!')
 
@@ -171,7 +171,7 @@ export default function Product({ categoryList }: CategoryProps) {
 export const getServerSideProps = canSSRAuth(async (ctx) => {
     const apiClient = setupAPIClient(ctx)
 
-    const response = await apiClient.get('/category')
+    const response = await apiClient.get('/category/')
 
     return {
         props: {
