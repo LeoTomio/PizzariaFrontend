@@ -9,7 +9,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { setupAPIClient } from "@/src/services/api";
 import { toast } from "react-toastify";
 
-type ItemProps = {
+export type ItemProps = {
     id: string;
     name: string;
 }
