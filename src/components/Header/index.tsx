@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext'
 
 export function Header() {
 
-    const { user, signOut } = useContext(AuthContext)
+    const { signOut } = useContext(AuthContext)
 
     return (
         <header className={styles.headerContainer}>

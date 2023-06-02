@@ -9,7 +9,6 @@ import { CategoryProps, ItemProps } from "../product";
 import styles from './styles.module.scss';
 
 import { CategoryModal } from "@/src/components/ModalCategory";
-import { api } from "@/src/services/apiClient";
 import { AxiosError } from "axios";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 import { toast } from "react-toastify";
@@ -27,6 +26,8 @@ export default function Category({ categoryList: listCategory }: CategoryProps) 
     }
 
     async function handleEdit(item: ItemProps) {
+
+        const api = setupAPIClient();
         const response = await api.get(`/category/${item.id}`)
         setSelectedCategory(response.data)
         setOpenModalCategory(true)
@@ -34,6 +35,8 @@ export default function Category({ categoryList: listCategory }: CategoryProps) 
 
     async function handleDelete(item: any) {
         setOpenModalCategory(false)
+
+        const api = setupAPIClient();
         await api.delete(`/category/${item.id}`).then((response) => {
             toast.success(response.data.message)
 

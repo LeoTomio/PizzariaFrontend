@@ -102,7 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function signUp({ email, name, password }: SignUpProps) {
         try {
-            const response = api.post('/users', { email, name, password })
+            api.post('/users', { email, name, password })
 
             toast.success("Conta criada com sucesso!")
 

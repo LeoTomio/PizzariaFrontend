@@ -77,7 +77,7 @@ export function CategoryModal({ isOpen, onRequestClose, selectedCategory, catego
                 <button className={styles.closeButton} onClick={onRequestClose} style={{ background: 'transparent', border: 'none' }}>
                     <FiX size={35} color="#f34748" />
                 </button>
-                <h1>Cadastrar categoria</h1>
+                <h1>{selectedCategory ? "Editar" : "Cadastrar"} categoria</h1>
                 <div className={styles.form} >
                     <input
                         type="text"
