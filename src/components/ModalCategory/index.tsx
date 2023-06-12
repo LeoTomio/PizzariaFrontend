@@ -7,14 +7,14 @@ import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
 import { toast } from "react-toastify";
 import styles from './styles.module.scss';
 import { FiX } from "react-icons/fi";
-import { ItemProps } from "@/src/pages/product";
+import { CategoryItemProps } from "@/src/pages/category";
 
 interface ModalCategoryProps {
     isOpen: boolean;
     onRequestClose: () => void;
-    selectedCategory: ItemProps
-    categoryList: ItemProps[]
-    setCategoryList: Dispatch<SetStateAction<ItemProps[]>>;
+    selectedCategory: CategoryItemProps
+    categoryList: CategoryItemProps[]
+    setCategoryList: Dispatch<SetStateAction<CategoryItemProps[]>>;
 
 }
 
@@ -30,7 +30,7 @@ export function CategoryModal({ isOpen, onRequestClose, selectedCategory, catego
         }
         const apiClient = setupAPIClient();
         await apiClient.post('/category/', { name }).then((response) => {
-            let listCategory: ItemProps[] = categoryList
+            let listCategory: CategoryItemProps[] = categoryList
             listCategory.push({
                 id: response.data.id,
                 name: name

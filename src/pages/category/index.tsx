@@ -4,8 +4,6 @@ import { canSSRAuth } from "@/src/utils/canSSRauth";
 import Head from "next/head";
 
 import { useState } from "react";
-
-import { CategoryProps, ItemProps } from "../product";
 import styles from './styles.module.scss';
 
 import { CategoryModal } from "@/src/components/ModalCategory";
@@ -13,19 +11,26 @@ import { AxiosError } from "axios";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
 import { toast } from "react-toastify";
 
+export type CategoryItemProps = {
+    id: string;
+    name: string;
+}
 
+export interface CategoryProps {
+    categoryList: CategoryItemProps[];
+}
 
 export default function Category({ categoryList: listCategory }: CategoryProps) {
 
     const [categoryList, setCategoryList] = useState(listCategory || [])
     const [openModalCategory, setOpenModalCategory] = useState<boolean>(false)
-    const [selectedCategory, setSelectedCategory] = useState<ItemProps | undefined>()
+    const [selectedCategory, setSelectedCategory] = useState<CategoryItemProps | undefined>()
 
     function handleCloseModal() {
         setOpenModalCategory(false)
     }
 
-    async function handleEdit(item: ItemProps) {
+    async function handleEdit(item: CategoryItemProps) {
 
         const api = setupAPIClient();
         const response = await api.get(`/category/${item.id}`)
@@ -76,7 +81,6 @@ export default function Category({ categoryList: listCategory }: CategoryProps) 
                     <h1>Cadastrar Categorias</h1>
                     <div className={styles.containerHeader}>
                         <div>
-
                             <button onClick={() => setOpenModalCategory(true)}>Adicionar</button>
                         </div>
                     </div>
