@@ -52,3 +52,19 @@ button {
     font-size: 93.75%; //vai gerar 15px
   }
 }
+
+/* Estilizando a scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* Largura da scrollbar */
+}
+
+/* Estilizando o polegar (thumb) da scrollbar */
+::-webkit-scrollbar-thumb {
+  background-color: #999; /* Cor do polegar */
+  border-radius: 5px; /* Raio de borda do polegar */
+}
+
+/* Estilizando o polegar (thumb) quando estiver em hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #666; /* Cor do polegar em hover */
+}

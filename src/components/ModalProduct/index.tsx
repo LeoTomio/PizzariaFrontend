@@ -35,15 +35,15 @@ export default function ProductModal({ isOpen, onRequestClose, selectedProduct, 
     const [imageAvatar, setImageAvatar] = useState(null)
 
     const [categories, setCategories] = useState(categoryList || [])
-    const [selectedCategory, setSelectedCategory] = useState<CategoryItemProps | undefined>()
+    const [selectedCategory, setSelectedCategory] = useState<string | undefined>(categories[0].id)
 
 
     useEffect(() => {
-        if (selectedProduct) { 
+        if (selectedProduct) {
             setName(selectedProduct.name)
             setPrice(selectedProduct.price)
             setDescription(selectedProduct.description)
-            setSelectedCategory(categories.find(item => { if (item.id === selectedProduct.category_id) return item }))
+            setSelectedCategory(categories.find(item => { if (item.id === selectedProduct.category_id) return item }).id)
             setImageAvatar(selectedProduct.banner)
             setAvatarUrl(baseURL + '/files/' + selectedProduct.banner)
         }
@@ -66,7 +66,7 @@ export default function ProductModal({ isOpen, onRequestClose, selectedProduct, 
 
     }
 
-    async function submit(e: FormEvent) {
+    async function submit(e: FormEvent) { 
         e.preventDefault();
         try {
             const apiClient = setupAPIClient();
@@ -91,6 +91,7 @@ export default function ProductModal({ isOpen, onRequestClose, selectedProduct, 
                     toast.success(response.data.message)
                     onRequestClose()
                 })
+
             } else {
                 const data = new FormData();
                 if (!name || !price || !description || !imageAvatar) {
@@ -100,7 +101,7 @@ export default function ProductModal({ isOpen, onRequestClose, selectedProduct, 
                 data.append('name', name)
                 data.append('price', price)
                 data.append('description', description)
-                data.append('category_id', selectedCategory.id)
+                data.append('category_id', selectedCategory)
                 data.append('file', imageAvatar)
 
                 await apiClient.post('/product/', data).then((response) => {
@@ -109,7 +110,7 @@ export default function ProductModal({ isOpen, onRequestClose, selectedProduct, 
                         name,
                         description,
                         price,
-                        category_id: selectedCategory.id
+                        category_id: selectedCategory
                     })
                     setProductList(newList)
                 })
@@ -157,7 +158,7 @@ export default function ProductModal({ isOpen, onRequestClose, selectedProduct, 
                         )}
                     </label>
 
-                    <select value={selectedProduct.category_id || ''} disabled={!!selectedProduct} onChange={handleChangeCategory}>
+                    <select value={selectedProduct ? selectedProduct.category_id : selectedCategory ? selectedCategory : categories[0].id} disabled={!!selectedProduct} onChange={handleChangeCategory}>
                         {categories.map((item, key) => {
                             return (
                                 <option key={item.id} value={item.id}>
