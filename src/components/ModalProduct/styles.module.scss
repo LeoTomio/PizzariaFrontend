@@ -1,14 +1,28 @@
 .container {
+    margin: 2em auto;
+    height: 90%;
+    overflow: auto;
     max-width: 720px;
-    margin: 4rem auto;
-    padding: 0 2rem;
 
+}
+
+.container::-webkit-scrollbar {
+    width: 0px;
+}
+
+.modalBody {
+    max-width: 720px;
+    width: 100%;
+    margin: 3rem auto;
+    padding: 2rem 3rem 0;
+    background-color: var(--dark-700);
+    border-radius: 16px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
 }
 
-.container h1 {
+.modalBody h1 {
     color: var(--white)
 }
 
@@ -48,7 +62,9 @@
 
 
     .buttonContainer {
-        text-align: center;
+        display: flex;
+        justify-content: space-between;
+
 
         .buttonAdd {
             border-radius: 0.8rem;
@@ -76,16 +92,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 
 
     input {
         display: none;
     }
 
-    span {
-        z-index: 99;
-        position: absolute;
+    span {  
         opacity: 0.7;
         transition: all 0.2s;
     }
@@ -98,11 +111,10 @@
 
 
 .preview {
-    /*
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius:0.8rem;
-    */
+    object-fit: scale-down;
     border-radius: 0.8rem;
+    border-radius: 0.8rem;
+    
 }

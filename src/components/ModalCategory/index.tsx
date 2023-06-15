@@ -73,7 +73,7 @@ export function CategoryModal({ isOpen, onRequestClose, selectedCategory, catego
 
     return (
         <Modal isOpen={isOpen} onRequestClose={onRequestClose} className={styles.container}>
-            <div className={styles.teste}>
+            <div className={styles.modalBody}>
                 <button className={styles.closeButton} onClick={onRequestClose} style={{ background: 'transparent', border: 'none' }}>
                     <FiX size={35} color="#f34748" />
                 </button>

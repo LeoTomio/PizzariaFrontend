@@ -43,11 +43,11 @@ export default function Category({ categoryList: listCategory }: CategoryProps) 
 
         const api = setupAPIClient();
         await api.delete(`/category/${item.id}`).then((response) => {
-            toast.success(response.data.message)
 
             let newCategoryList = categoryList.filter(categoryItem => {
                 return (categoryItem.id !== item.id)
             })
+            toast.success(response.data.message)
             setCategoryList(newCategoryList)
         }).catch((error: AxiosError | any) => {
             toast.error(error.response.data.message)

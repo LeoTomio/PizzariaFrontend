@@ -1,169 +1,120 @@
-import Head from "next/head";
-import styles from './styles.module.scss'
 
-import { canSSRAuth } from "@/src/utils/canSSRauth";
-import { Header } from "@/src/components/Header";
-import { Input } from "@/src/components/ui/Input";
-import { FiUpload } from "react-icons/fi";
-import { ChangeEvent, FormEvent, useState } from "react";
 import { setupAPIClient } from "@/src/services/api";
+import { canSSRAuth } from "@/src/utils/canSSRauth";
+import { useState } from "react";
+import styles from './styles.module.scss';
+import { FiEdit3, FiTrash2 } from "react-icons/fi";
+import Head from "next/head";
+import { Header } from "@/src/components/Header";
+import { CategoryItemProps } from "../category";
+import ProductModal from "@/src/components/ModalProduct";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
-export type ItemProps = {
+export type ProductItemProps = {
     id: string;
     name: string;
+    description: string;
+    price: string;
+    category_id: string;
+    banner?: string;
 }
 
-export interface CategoryProps {
-    categoryList: ItemProps[];
+export interface ProductProps {
+    productList: ProductItemProps[];
+    categoryList: CategoryItemProps[];
 }
 
-export default function Product({ categoryList }: CategoryProps) {
+export default function Product({ productList: listProduct, categoryList }: ProductProps) {
 
-    const [name, setName] = useState<string>('')
-    const [price, setPrice] = useState<string>('')
-    const [description, setDescription] = useState<string>('')
+    const [productList, setProductList] = useState(listProduct || [])
+    const [category, setCategory] = useState(categoryList || [])
+    const [openModal, setOpenModal] = useState<boolean>(false)
+    const [selectedProduct, setSelectedProduct] = useState<ProductItemProps | undefined>()
 
-
-    const [avatarUrl, setAvatarUrl] = useState<string>('')
-    const [imageAvatar, setImageAvatar] = useState(null)
-
-    const [categories, setCategories] = useState(categoryList || [])
-    const [selectedCategory, setSelectedCategory] = useState(0)
-
-
-    function handleFile(e: ChangeEvent<HTMLInputElement>) {
-        if (!e.target.files) {
-            return;
-        }
-        const image = e.target.files[0];
-
-        if (!image) {
-            return
-        }
-        if (image.type === 'image/jpeg' || image.type === 'image/png') {
-            setImageAvatar(image)
-            setAvatarUrl(URL.createObjectURL(e.target.files[0]))
-        }
-
-    }
-    //Quando voce selecionar uma nova categoria na lista 
-    function handleChangeCategory(event) {
-        setSelectedCategory(event.target.value)
+    async function handleEdit(item: ProductItemProps) {
+        const api = setupAPIClient();
+        const response = await api.get(`/product/${item.id}`)
+        setSelectedProduct(response.data)
+        setOpenModal(true)
     }
 
-    async function handleRegister(e: FormEvent) {
-        e.preventDefault();
-        try {
-            const data = new FormData();
-            if (!name || !price || !description || !imageAvatar) {
-                toast.error("Preencha todos os campos!")
-                return;
-            }
-            data.append('name', name)
-            data.append('price', price)
-            data.append('description', description)
-            data.append('category_id', categories[selectedCategory].id)
-            data.append('file', imageAvatar)
-
-            const apiClient = setupAPIClient();
-
-            await apiClient.post('/product/', data)
-
-            toast.success('Cadastrado com sucesso!')
-
-        } catch (error) {
+    async function handleDelete(item: any) {
+        const api = setupAPIClient();
+        await api.delete(`/product/${item.id}`).then((response) => {
+            let newList = productList.filter(productItem => {
+                return (productItem.id !== item.id)
+            })
+            setProductList(newList)
+            toast.success(response.data.message)
+        }).catch((error: AxiosError | any) => {
             console.log(error)
-            toast.error('Erro ao cadastrar!')
-        }
-
-        clear();
+            toast.error(error.response.data.message)
+        })
+    }
+    function handleCloseModal() {
+        setSelectedProduct(undefined)
+        setOpenModal(false)
     }
 
-    function clear() {
-        setName('')
-        setPrice('')
-        setSelectedCategory(0)
-        setDescription('')
-        setImageAvatar(null)
-        setAvatarUrl('')
-    }
+    const filteredProducts = category.map((itemCategory, key) => {
+        let item = productList.filter((itemProduct) => itemProduct.category_id === itemCategory.id)
+        return (
+            <div className={styles.categoryTitle}>
+                <h1>{itemCategory.name}</h1>
+                {item.map((item) => {
+                    return (
+                        <div className={styles.list} key={key}>
+                            <div>
+                                <p className={styles.name}>{item.name}</p>
+                                <p title={item.description} className={styles.description}>{item.description}</p>
+                            </div>
+                            <div key={item.id} className={styles.item}>
+                                <button onClick={() => handleEdit(item)}>
+                                    <FiEdit3 size={20} color={'#3FFFA3'} />
+                                </button>
+                                <button onClick={() => handleDelete(item)}>
+                                    <FiTrash2 size={20} color={'#FF3F4B'} />
+                                </button>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    })
+
 
     return (
         <>
             <Head>
-                <title>Novo produto</title>
-
+                <title>Produtos</title>
             </Head>
-
             <div>
                 <Header />
-
                 <main className={styles.container}>
-                    <h1>Novo produto</h1>
-                    <form className={styles.form} onSubmit={handleRegister}>
-
-
-                        <label className={styles.labelAvatar}>
-                            <span>
-                                <FiUpload size={30} color="#FFF" />
-                            </span>
-
-                            <input type='file' accept="image/png, image/jpeg" onChange={handleFile} />
-
-                            {!!avatarUrl && (
-                                <img
-                                    className={styles.preview}
-                                    src={avatarUrl}
-                                    alt="Foto do produto"
-                                    width={250}
-                                    height={250}
-                                />
-                            )}
-                        </label>
-
-                        <select value={selectedCategory} onChange={handleChangeCategory}>
-                            {categories.map((item, key) => {
-                                return (
-                                    <option key={item.id} value={key}>
-                                        {item.name}
-                                    </option>
-                                )
-                            })}
-                        </select>
-
-
-                        <Input
-                            type="text"
-                            placeholder="Digite o nome do produto"
-                            className={styles.input}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)} />
-
-                        <Input
-                            type="text"
-                            placeholder="Preço do produto"
-                            className={styles.input}
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)} />
-
-                        <textarea
-                            placeholder="Descreva seu produto..."
-                            className={styles.input}
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)} />
-
-                        <div className={styles.buttonContainer}>
-                            <button className={styles.buttonAdd} type='submit'>
-                                Cadastrar
-                            </button>
-                            <button className={styles.buttonAdd} type='reset' onClick={clear}>
-                                Limpar
-                            </button>
+                    <h1>Cadastrar Produtos</h1>
+                    <div className={styles.containerHeader}>
+                        <div>
+                            <button onClick={() => setOpenModal(true)}>Adicionar</button>
                         </div>
-                    </form>
+                    </div>
+                    {filteredProducts}
                 </main>
+
+                {openModal === true &&
+                    <ProductModal
+                        isOpen={openModal}
+                        onRequestClose={handleCloseModal}
+                        selectedProduct={selectedProduct}
+                        productList={productList}
+                        categoryList={categoryList}
+                        setProductList={setProductList}
+
+                    />}
             </div>
+
+
         </>
     )
 }
@@ -171,11 +122,12 @@ export default function Product({ categoryList }: CategoryProps) {
 export const getServerSideProps = canSSRAuth(async (ctx) => {
     const apiClient = setupAPIClient(ctx)
 
-    const response = await apiClient.get('/category/')
-
+    const productResponse = await apiClient.get('/product/')
+    const categoryResponse = await apiClient.get('/category/')
     return {
         props: {
-            categoryList: response.data
+            productList: productResponse.data,
+            categoryList: categoryResponse.data
         }
     }
 })
