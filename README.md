@@ -14,11 +14,10 @@ https://www.figma.com/file/yTPA50bLeQdJOCrg5sAOqU/Pizzaria-Sujeito?node-id=0-1
 <h2>  Para fazer futuramente 🚀</h2>
 
 1) Ver como gerar um build do projeto para rodar direto no celular<br>
-2) Como hospedar em algum servidor
-3) Fazer uma tela de Cardapio no web
+2) Como hospedar em algum servidor (webhost, googleCloud, ddrhost)
+X 3) Fazer uma tela de Cardapio no web
 4) Arrumar a tela de detalhes do pedido para ficar mais bonito visualmente
 X 5) Pagina para listar/editar/deletar produtos   
 X 6) Pagina para listar/editar/deletar produtos 
 7) Apos salvar a imagem reduzir a qualidade dela
-8) Talvez na listagem de produto por uma imagem atrelada a cada produto
 

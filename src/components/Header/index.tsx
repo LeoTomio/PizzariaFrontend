@@ -19,6 +19,9 @@ export function Header() {
 
                 {/*<div className={styles.userDiv}><h2><b>Usuario:</b> {user?.name}</h2></div>*/}
                 <nav className={styles.menuNav}>
+                    <Link href="/productList" legacyBehavior>
+                        <a>Cardapio</a>
+                    </Link>
                     {/* O que ta no href tem que ser igual o nome da pasta */}
                     <Link href="/category" legacyBehavior>
                         <a>Categoria</a>
